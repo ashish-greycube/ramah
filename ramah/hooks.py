@@ -141,13 +141,12 @@ doctype_js = {
 # ---------------
 # Hook on document methods and events
 
-# doc_events = {
-# 	"*": {
-# 		"on_update": "method",
-# 		"on_cancel": "method",
-# 		"on_trash": "method"
-# 	}
-# }
+doc_events = {
+	"Quotation": {
+		"validate": "ramah.doc_events.validate_child_items",
+        "order_type": "ramah.doc_events.validate_child_items"
+	}
+}
 
 # Scheduled Tasks
 # ---------------
