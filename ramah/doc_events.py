@@ -3,7 +3,7 @@ import frappe
 @frappe.whitelist()
 def get_settings_data(height, hole_type, qty):
     doc = frappe.get_doc("Ramah Settings")
-    table = doc.get("table_izdl")
+    table = doc.get("slide_settings")
 
     return_hole_qty = 0
 
@@ -24,12 +24,9 @@ def get_settings_data(height, hole_type, qty):
     }
     
 @frappe.whitelist()
-def validate_child_items(doc, method):
-    print("="*100)
-    
+def validate_child_items(doc, method):    
     items = doc.items
 
     for i in items:
         if i.rate < i.custom_less_rate_for_sale:
-            print("="*100, i.idx, i.name, i.doctype)
             frappe.throw(f"<p>You have entered wrong value of <b>Rate</b> for item in row <b>{i.idx}</b>.</p><p>It should be more than <b>{i.custom_less_rate_for_sale}</b></p>")

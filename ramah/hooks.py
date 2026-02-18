@@ -144,7 +144,6 @@ doctype_js = {
 doc_events = {
 	"Quotation": {
 		"validate": "ramah.doc_events.validate_child_items",
-        "order_type": "ramah.doc_events.validate_child_items"
 	}
 }
 
