@@ -46,7 +46,9 @@ app_license = "mit"
 doctype_js = {
     "Sales Order" : "public/js/common_items.js",
     "Sales Invoice" : "public/js/common_items.js",
-    "Quotation" : "public/js/common_items.js"
+    "Quotation" : "public/js/common_items.js",
+    "Batch" : "public/js/batch.js",
+    "Stock Entry" : "public/js/stock_entry.js"
 }
 # doctype_list_js = {"doctype" : "public/js/doctype_list.js"}
 # doctype_tree_js = {"doctype" : "public/js/doctype_tree.js"}
@@ -88,6 +90,8 @@ doctype_js = {
 
 # before_install = "ramah.install.before_install"
 # after_install = "ramah.install.after_install"
+
+after_migrate = "ramah.migrate.after_migrate"
 
 # Uninstallation
 # ------------
