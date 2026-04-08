@@ -48,7 +48,8 @@ doctype_js = {
     "Sales Invoice" : "public/js/common_items.js",
     "Quotation" : "public/js/common_items.js",
     "Batch" : "public/js/batch.js",
-    "Stock Entry" : "public/js/stock_entry.js"
+    "Stock Entry" : "public/js/stock_entry.js",
+    "Stock Reconciliation": "public/js/stock_reconciliation.js"
 }
 # doctype_list_js = {"doctype" : "public/js/doctype_list.js"}
 # doctype_tree_js = {"doctype" : "public/js/doctype_tree.js"}
@@ -148,7 +149,10 @@ after_migrate = "ramah.migrate.after_migrate"
 doc_events = {
 	"Quotation": {
 		"validate": "ramah.doc_events.validate_child_items",
-	}
+	},
+    "Stock Reconciliation": {
+        "before_insert": "ramah.doc_events.before_insert_stock_reconcillation"
+    }
 }
 
 # Scheduled Tasks
