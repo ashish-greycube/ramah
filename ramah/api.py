@@ -189,15 +189,6 @@ def append_item_details_sr(item, line, qty, warehouse, name):
 		})
 	return items_to_add
 
-	# doc = frappe.get_doc("Stock Reconciliation", name)
-	# frappe.errprint(doc)
-	# for i in range(int(line)):
-	# 	frappe.errprint(i)
-	# 	doc.append("items", {
-	# 		"item_code": item,
-	# 		"qty": qty,
-	# 		"warehouse": warehouse
-	# 	})
 
 
 @frappe.whitelist()

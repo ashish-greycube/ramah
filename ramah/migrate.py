@@ -78,9 +78,24 @@ def after_migrate():
                 is_system_generated=0,
                 fieldtype="Link",
                 label="Item",
-                fieldname="custom_item_link",
+                fieldname="custom_item",
                 options="Item",
                 insert_after="sb9"
+            ),
+            dict(
+                is_custom_field=1,
+                is_system_generated=0,
+                fieldtype="Button",
+                label="Add Items",
+                fieldname="custom_button",
+                insert_after="custom_item"
+            ),
+            dict(
+                is_custom_field=1,
+                is_system_generated=0,
+                fieldtype="Column Break",
+                fieldname="custom_column_break_item",
+                insert_after="custom_item"
             ),
             dict(
                 is_custom_field=1,
@@ -88,7 +103,14 @@ def after_migrate():
                 fieldtype="Int",
                 label="Number of Line",
                 fieldname="custom_no_of_line",
-                insert_after="custom_item_link"
+                insert_after="custom_column_break_item"
+            ),
+            dict(
+                is_custom_field=1,
+                is_system_generated=0,
+                fieldtype="Column Break",
+                fieldname="custom_column_break_no_of_line",
+                insert_after="custom_no_of_line"
             ),
             dict(
                 is_custom_field=1,
@@ -96,14 +118,13 @@ def after_migrate():
                 fieldtype="Float",
                 label="Qty",
                 fieldname="custom_qty",
-                insert_after="custom_no_of_line"
+                insert_after="custom_column_break_no_of_line"
             ),
             dict(
                 is_custom_field=1,
                 is_system_generated=0,
-                fieldtype="Button",
-                label="Append",
-                fieldname="custom_button",
+                fieldtype="Section Break",
+                fieldname="custom_qty_section_break",
                 insert_after="custom_qty"
             ),
         ]

@@ -72,28 +72,25 @@ frappe.ui.form.on("Stock Reconciliation", {
         })
     },
     custom_button(frm) {
-        if (frm.doc.custom_item_link) {
+        if (!frm.doc.set_warehouse) {
+            frappe.throw("Please select warehouse before appending items")
+        }
+
+        if (frm.doc.custom_item) {
             frappe.call({
                 method: "ramah.api.append_item_details_sr",
                 args: {
-                    "item": frm.doc.custom_item_link,
+                    "item": frm.doc.custom_item,
                     "line": frm.doc.custom_no_of_line,
                     "qty": frm.doc.custom_qty,
                     "warehouse": frm.doc.set_warehouse,
                     "name": frm.doc.name
                 },
                 callback: async (r) => {
-                    // if (r.message) {
-                    //     console.log(r.message)
-                    //     r.message.forEach(row_data => {
-                    //         let child = frm.add_child("items")
-                    //         frappe.model.set_value(child.doctype, child.name, row_data)
-                    //         frappe.model.set_value(child.doctype, child.name, "use_serial_batch_fields", 1)
-                    //     })
-                    //     frm.refresh_field("items")
-                    // }
 
                     if (r.message) {
+                        frm.set_value('items', []);
+                        frm.refresh_field("items");
                         for (let row_data of r.message) {
                             let child = frm.add_child("items");
 
@@ -103,7 +100,7 @@ frappe.ui.form.on("Stock Reconciliation", {
 
                             await frappe.model.set_value(child.doctype, child.name, "qty", row_data.qty);
 
-                            frappe.model.set_value(child.doctype, child.name, "use_serial_batch_fields", 1);
+                            await frappe.model.set_value(child.doctype, child.name, "use_serial_batch_fields", 1);
                         }
                         frm.refresh_field("items");
                     }
@@ -117,16 +114,14 @@ frappe.ui.form.on("Stock Reconciliation", {
 frappe.ui.form.on("Stock Reconciliation Item", {
     item_code(frm, cdt, cdn) {
         let row = locals[cdt][cdn]
-
         frappe.call({
             method: "ramah.api.get_valuation_rate_from_item",
             args: {
                 "item": row["item_code"]
             },
         }).then((r) => {
-            // frappe.model.set_value(cdt, cdn, 'qty', 1);
+            frappe.model.set_value(cdt, cdn, 'qty', 1);
             frappe.model.set_value(cdt, cdn, 'valuation_rate', r.message);
-
             frm.refresh_field("items");
         })
     }
