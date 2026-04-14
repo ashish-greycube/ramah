@@ -70,5 +70,64 @@ frappe.ui.form.on("Stock Reconciliation", {
 
             create_args()
         })
+    },
+    custom_button(frm) {
+        if (frm.doc.custom_item_link) {
+            frappe.call({
+                method: "ramah.api.append_item_details_sr",
+                args: {
+                    "item": frm.doc.custom_item_link,
+                    "line": frm.doc.custom_no_of_line,
+                    "qty": frm.doc.custom_qty,
+                    "warehouse": frm.doc.set_warehouse,
+                    "name": frm.doc.name
+                },
+                callback: async (r) => {
+                    // if (r.message) {
+                    //     console.log(r.message)
+                    //     r.message.forEach(row_data => {
+                    //         let child = frm.add_child("items")
+                    //         frappe.model.set_value(child.doctype, child.name, row_data)
+                    //         frappe.model.set_value(child.doctype, child.name, "use_serial_batch_fields", 1)
+                    //     })
+                    //     frm.refresh_field("items")
+                    // }
+
+                    if (r.message) {
+                        for (let row_data of r.message) {
+                            let child = frm.add_child("items");
+
+                            await frappe.model.set_value(child.doctype, child.name, "item_code", row_data.item_code);
+
+                            await frappe.model.set_value(child.doctype, child.name, "warehouse", row_data.warehouse);
+
+                            await frappe.model.set_value(child.doctype, child.name, "qty", row_data.qty);
+
+                            frappe.model.set_value(child.doctype, child.name, "use_serial_batch_fields", 1);
+                        }
+                        frm.refresh_field("items");
+                    }
+                }
+            })
+        }
+    }
+})
+
+
+frappe.ui.form.on("Stock Reconciliation Item", {
+    item_code(frm, cdt, cdn) {
+        let row = locals[cdt][cdn]
+
+        frappe.call({
+            method: "ramah.api.get_valuation_rate_from_item",
+            args: {
+                "item": row["item_code"]
+            },
+        }).then((r) => {
+            // frappe.model.set_value(cdt, cdn, 'qty', 1);
+            frappe.model.set_value(cdt, cdn, 'valuation_rate', r.message);
+
+            frm.refresh_field("items");
+        })
     }
 })

@@ -71,6 +71,41 @@ def after_migrate():
                 fieldname="custom_color",
                 insert_after="custom_height"
             ),
+        ],
+        "Stock Reconciliation" : [
+            dict(
+                is_custom_field=1,
+                is_system_generated=0,
+                fieldtype="Link",
+                label="Item",
+                fieldname="custom_item_link",
+                options="Item",
+                insert_after="sb9"
+            ),
+            dict(
+                is_custom_field=1,
+                is_system_generated=0,
+                fieldtype="Int",
+                label="Number of Line",
+                fieldname="custom_no_of_line",
+                insert_after="custom_item_link"
+            ),
+            dict(
+                is_custom_field=1,
+                is_system_generated=0,
+                fieldtype="Float",
+                label="Qty",
+                fieldname="custom_qty",
+                insert_after="custom_no_of_line"
+            ),
+            dict(
+                is_custom_field=1,
+                is_system_generated=0,
+                fieldtype="Button",
+                label="Append",
+                fieldname="custom_button",
+                insert_after="custom_qty"
+            ),
         ]
     }
 

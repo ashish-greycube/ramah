@@ -21,44 +21,44 @@ from frappe.utils.pdf import get_pdf
 # Function called by URL for getting print pdf
 @frappe.whitelist()
 def get_pdf_file(docname, args_data):
-    import json
-    
-    # Parse args_data if it's a string
-    if isinstance(args_data, str):
-        args_data = json.loads(args_data.replace("'", '"'))
-    
-    # Generate barcodes for all items using get_barcode func.
-    for item in args_data:
-        if item.get('barcode'):
-            # Generate barcode and set in in args_data as bar_code
-            item['bar_code'] = get_barcode("code128", item['barcode'], None, None, None, True)
-    
-    # Render template with barcode and all data
-    html = frappe.render_template(
-        "ramah/ramah/print_format/batch_no_barcode/batch_no_barcode.html",
-        {
-            "args": {
-                "args_data": json.dumps(args_data)
-            },
-            "items_with_barcodes": args_data  # Pass the data with barcodes, we can access this for printing all data
-        }
-    )
-    
+	import json
+	
+	# Parse args_data if it's a string
+	if isinstance(args_data, str):
+		args_data = json.loads(args_data.replace("'", '"'))
+	
+	# Generate barcodes for all items using get_barcode func.
+	for item in args_data:
+		if item.get('barcode'):
+			# Generate barcode and set in in args_data as bar_code
+			item['bar_code'] = get_barcode("code128", item['barcode'], None, None, None, True)
+	
+	# Render template with barcode and all data
+	html = frappe.render_template(
+		"ramah/ramah/print_format/batch_no_barcode/batch_no_barcode.html",
+		{
+			"args": {
+				"args_data": json.dumps(args_data)
+			},
+			"items_with_barcodes": args_data  # Pass the data with barcodes, we can access this for printing all data
+		}
+	)
+	
 	# Page dimensions
-    options = {
-        "page-width": "6cm",
-        "page-height": "4cm",
-        "margin-left": "0mm",
-        "margin-right": "0mm"
-    }
-    
-    pdf = get_pdf(html, options)
-    
-    frappe.local.response.filename = "{name}.pdf".format(
-        name=docname.replace(" ", "-").replace("/", "-")
-    )
-    frappe.local.response.filecontent = pdf
-    frappe.local.response.type = "pdf"
+	options = {
+		"page-width": "6cm",
+		"page-height": "4cm",
+		"margin-left": "0mm",
+		"margin-right": "0mm"
+	}
+	
+	pdf = get_pdf(html, options)
+	
+	frappe.local.response.filename = "{name}.pdf".format(
+		name=docname.replace(" ", "-").replace("/", "-")
+	)
+	frappe.local.response.filecontent = pdf
+	frappe.local.response.type = "pdf"
 
 # Function for getting barcode from any alphanumeric string	=>	got from Print Designer
 @frappe.whitelist()
@@ -176,3 +176,32 @@ def get_qrcode(barcode_value, options=None, png_base64=False):
 		stream.close()
 
 	return {"type": "png_base64" if png_base64 else "svg", "value": qrcode_svg}
+
+
+@frappe.whitelist()
+def append_item_details_sr(item, line, qty, warehouse, name):
+	items_to_add = []
+	for i in range(int(line)):
+		items_to_add.append({
+			"item_code": item,
+			"qty": qty,
+			"warehouse": warehouse
+		})
+	return items_to_add
+
+	# doc = frappe.get_doc("Stock Reconciliation", name)
+	# frappe.errprint(doc)
+	# for i in range(int(line)):
+	# 	frappe.errprint(i)
+	# 	doc.append("items", {
+	# 		"item_code": item,
+	# 		"qty": qty,
+	# 		"warehouse": warehouse
+	# 	})
+
+
+@frappe.whitelist()
+def get_valuation_rate_from_item(item):
+	valuation_rate = frappe.get_value("Item", item, "valuation_rate")
+
+	return valuation_rate
