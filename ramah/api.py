@@ -185,7 +185,9 @@ def append_item_details_sr(item, line, qty, warehouse, name):
 		items_to_add.append({
 			"item_code": item,
 			"qty": qty,
-			"warehouse": warehouse
+			"warehouse": warehouse,
+			"color" : frappe.db.get_value("Item", item, "test") or "",
+			"valuation_rate": frappe.db.get_value("Item", item, "valuation_rate") or 0,
 		})
 	return items_to_add
 

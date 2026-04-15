@@ -87,20 +87,19 @@ frappe.ui.form.on("Stock Reconciliation", {
                     "name": frm.doc.name
                 },
                 callback: async (r) => {
-
                     if (r.message) {
-                        frm.set_value('items', []);
-                        frm.refresh_field("items");
+                        if (frm.doc.items && frm.doc.items.length == 1 && !frm.doc.items[0].item_code) {
+                            frm.set_value("items", []);
+                            frm.refresh_field("items");
+                        }
                         for (let row_data of r.message) {
                             let child = frm.add_child("items");
-
                             await frappe.model.set_value(child.doctype, child.name, "item_code", row_data.item_code);
-
                             await frappe.model.set_value(child.doctype, child.name, "warehouse", row_data.warehouse);
-
                             await frappe.model.set_value(child.doctype, child.name, "qty", row_data.qty);
-
                             await frappe.model.set_value(child.doctype, child.name, "use_serial_batch_fields", 1);
+                            await frappe.model.set_value(child.doctype, child.name, "valuation_rate", row_data.valuation_rate);
+                            await frappe.model.set_value(child.doctype, child.name, "custom_color", row_data.color);
                         }
                         frm.refresh_field("items");
                     }
