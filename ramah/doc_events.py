@@ -39,7 +39,7 @@ from erpnext.stock.doctype.batch.batch import make_batch
 
 # Function for making Batch from item in Stock Reconsillation
 @frappe.whitelist()
-def before_insert_stock_reconcillation(doc, method):
+def create_batch_before_validate_in_stock_reconciliation(doc, method):
     items_list = doc.items
 
     has_batch_no = ""
@@ -47,24 +47,25 @@ def before_insert_stock_reconcillation(doc, method):
     batch_number_series = ""
 
     for item in items_list:
-        # checking if item has batch no. and auto batch naming on
-        has_batch_no = frappe.get_value("Item", item.item_code, "has_batch_no")
-        create_new_batch = frappe.get_value("Item", item.item_code, "create_new_batch")
-        batch_number_series = frappe.get_value("Item", item.item_code, "batch_number_series")
+        if item.batch_no == None:
+            # checking if item has batch no. and auto batch naming on
+            has_batch_no = frappe.get_value("Item", item.item_code, "has_batch_no")
+            create_new_batch = frappe.get_value("Item", item.item_code, "create_new_batch")
+            batch_number_series = frappe.get_value("Item", item.item_code, "batch_number_series")
 
-        if batch_number_series and create_new_batch and has_batch_no:
-            # using make_batch function for making batch from items
-            batch = make_batch(frappe._dict({
-                "item": item.item_code,
-                "manufacturing_date": doc.posting_date,
-                "stock_uom": item.stock_uom,
-                "custom_width": item.custom_width,
-                "custom_height": item.custom_height,
-                "custom_color": item.custom_color
-            }))
+            if batch_number_series and create_new_batch and has_batch_no:
+                # using make_batch function for making batch from items
+                batch = make_batch(frappe._dict({
+                    "item": item.item_code,
+                    "manufacturing_date": doc.posting_date,
+                    "stock_uom": item.stock_uom,
+                    "custom_width": item.custom_width,
+                    "custom_height": item.custom_height,
+                    "custom_color": item.custom_color
+                }))
 
-            # for setting barcode of batch
-            frappe.set_value("Batch", batch, "custom_batch_no_barcode", batch)
+                # for setting barcode of batch
+                frappe.set_value("Batch", batch, "custom_batch_no_barcode", batch)
 
-            # for setting batch no. in Items table in SR
-            item.batch_no = batch
+                # for setting batch no. in Items table in SR
+                item.batch_no = batch

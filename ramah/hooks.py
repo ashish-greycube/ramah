@@ -151,7 +151,7 @@ doc_events = {
 		"validate": "ramah.doc_events.validate_child_items",
 	},
     "Stock Reconciliation": {
-        "before_insert": "ramah.doc_events.before_insert_stock_reconcillation"
+        "before_validate": "ramah.doc_events.create_batch_before_validate_in_stock_reconciliation"
     }
 }
 
