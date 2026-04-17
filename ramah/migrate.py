@@ -127,10 +127,20 @@ def after_migrate():
                 fieldname="custom_qty_section_break",
                 insert_after="custom_qty"
             ),
+        ],
+        "Item" : [
+            dict(
+                is_custom_field=1,
+                is_system_generated=0,
+                fieldtype="Data",
+                label="Search Code",
+                fieldname="custom_search_code",
+                insert_after="naming_series"
+            ),
         ]
     }
 
-    print("Adding Custom Fields In Batch, Stock Entry, Stock Reconciliation Item .....")
+    print("Adding Custom Fields In Batch, Stock Entry, Stock Reconciliation Item, Item .....")
     for dt, fields in custom_fields.items():
         print("********************\n %s: " % dt, [d.get("fieldname") for d in fields])
     frappe.custom.doctype.custom_field.custom_field.create_custom_fields(custom_fields)

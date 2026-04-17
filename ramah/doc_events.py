@@ -69,3 +69,9 @@ def create_batch_before_validate_in_stock_reconciliation(doc, method):
 
                 # for setting batch no. in Items table in SR
                 item.batch_no = batch
+
+
+@frappe.whitelist()
+def on_validate_set_item_search_code(self, method):
+    if not self.custom_search_code:
+        self.custom_search_code = self.name + ","

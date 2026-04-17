@@ -152,6 +152,9 @@ doc_events = {
 	},
     "Stock Reconciliation": {
         "before_validate": "ramah.doc_events.create_batch_before_validate_in_stock_reconciliation"
+    },
+    "Item": {
+        "validate": "ramah.doc_events.on_validate_set_item_search_code",
     }
 }
 

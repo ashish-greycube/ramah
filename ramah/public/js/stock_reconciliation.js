@@ -123,5 +123,18 @@ frappe.ui.form.on("Stock Reconciliation Item", {
             frappe.model.set_value(cdt, cdn, 'valuation_rate', r.message);
             frm.refresh_field("items");
         })
+    },
+    batch_no(frm, cdt, cdn) {
+        if (frm.doc.amended_from) {
+            let row = locals[cdt][cdn]
+
+            // get value from ammended doc and then set to current doc [qty]
+            frappe.db.get_doc("Stock Reconciliation", frm.doc.amended_from)
+                .then((r) => {
+                    let old_qty = r.items[row.idx - 1]["qty"]
+
+                    frappe.model.set_value(cdt, cdn, 'qty', old_qty)
+                })
+        }
     }
 })
